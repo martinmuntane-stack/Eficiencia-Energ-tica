@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Energía Aeroparque</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="eyebrow">AEP · Eficiencia energética</div>
+      <h1>Consumo eléctrico del Aeroparque</h1>
+      <p class="sub" id="fuente">—</p>
+    </div>
+    <div class="top-actions">
+      <button type="button" class="btn" id="btn-cargar" aria-expanded="false" aria-controls="panel-carga">Cargar Excel</button>
+    </div>
+  </header>
+
+  <section class="panel-carga" id="panel-carga" hidden>
+    <div class="drop" id="drop">
+      <p><strong>Arrastrá el archivo .xlsx acá</strong> o elegilo desde tu equipo.</p>
+      <p class="hint">Se lee la hoja con columnas <code>Mes</code>, <code>Medidor</code> y <code>Consumo_kWh</code>. Si también están las hojas <code>Pasajeros</code>, <code>Cargas Alimentadas</code> y <code>GRADOS DIAS</code>, se usan automáticamente.</p>
+      <div class="drop-row">
+        <label for="anio-carga">Año de los datos</label>
+        <input type="number" id="anio-carga" min="2000" max="2100" step="1">
+        <label class="btn btn-primary" for="archivo">Elegir archivo<input type="file" id="archivo" accept=".xlsx,.xls,.xlsm,.csv" hidden></label>
+      </div>
+      <p class="hint">El año se usa sólo si la hoja no tiene columna <code>Año</code>. Cargar otro año lo agrega para comparar; cargar el mismo año lo reemplaza.</p>
+      <p class="msg" id="msg-carga" role="status"></p>
+      <div class="drop-row">
+        <button type="button" class="btn btn-ghost" id="btn-ejemplo">Volver a los datos de ejemplo</button>
+      </div>
+    </div>
+  </section>
+
+  <nav class="filtros" aria-label="Filtros">
+    <div class="campo">
+      <label for="f-anio">Año</label>
+      <select id="f-anio"></select>
+    </div>
+    <div class="campo">
+      <label for="f-mes">Mes</label>
+      <select id="f-mes"></select>
+    </div>
+    <div class="campo campo-ancho">
+      <label for="f-medidor">Medidor</label>
+      <select id="f-medidor"></select>
+    </div>
+  </nav>
+
+  <section class="kpis" id="kpis" aria-label="Resumen"></section>
+
+  <section class="card">
+    <div class="card-head">
+      <div>
+        <h2>Consumo mensual por subestación</h2>
+        <p class="nota">Total Aeroparque = SMEC (EDENOR 1/2) + medidores SET 02 (EDENOR 3). Tocá una barra para elegir el mes.</p>
+      </div>
+      <ul class="leyenda" id="leyenda-mensual"></ul>
+    </div>
+    <div class="chart chart-alto"><canvas id="ch-mensual" aria-label="Consumo mensual apilado por subestación" role="img"></canvas></div>
+  </section>
+
+  <div class="grid-2">
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h2 id="t-ranking">Ranking de medidores</h2>
+          <p class="nota">Submedidores y la parte de SMEC sin submedición. Tocá una barra para ver el medidor.</p>
+        </div>
+      </div>
+      <div class="chart" id="wrap-ranking"><canvas id="ch-ranking" aria-label="Ranking de consumo por medidor" role="img"></canvas></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h2 id="t-detalle">Detalle</h2>
+          <p class="nota" id="n-detalle"></p>
+        </div>
+      </div>
+      <dl class="ficha" id="ficha"></dl>
+      <div class="chart chart-bajo"><canvas id="ch-detalle" aria-label="Evolución mensual del medidor seleccionado" role="img"></canvas></div>
+    </section>
+  </div>
+
+  <section class="card">
+    <div class="card-head">
+      <div>
+        <h2>Consumo por medidor y por mes <span class="unidad">MWh</span></h2>
+        <p class="nota">El tono de cada celda es relativo al máximo de su propia fila. Tocá una fila para ver el medidor o el encabezado de un mes para filtrarlo.</p>
+      </div>
+    </div>
+    <div class="tabla-scroll"><table class="matriz" id="matriz"></table></div>
+  </section>
+
+  <footer class="pie">
+    <p>Los datos cargados se guardan sólo en este navegador. Mes <span class="pill pill-warn">parcial</span> = consumo menor al 50 % de la mediana de los demás meses (probablemente lectura incompleta).</p>
+  </footer>
+</div>
+
+<div class="tooltip" id="tooltip" hidden></div>
+
+<script src="js/vendor/chart.umd.min.js"></script>
+<script src="js/vendor/xlsx.full.min.js"></script>
+<script src="js/datos-ejemplo.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
