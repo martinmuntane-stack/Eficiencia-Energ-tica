@@ -1,93 +1,96 @@
 :root {
   color-scheme: light;
-  --bg: #f3f5f6;
-  --surface: #fcfdfd;
-  --surface-2: #eef1f3;
-  --ink: #0e1417;
-  --ink-2: #4b575e;
-  --muted: #7f8b90;
-  --grid: #e0e5e7;
-  --axis: #c2cacd;
-  --border: rgba(14, 20, 23, 0.10);
-  --accent: #2a78d6;
+  --bg: #f2f4f3;
+  --surface: #fdfdfc;
+  --surface-2: #eceeed;
+  --ink: #17191a;
+  --ink-2: #4c5052;
+  --muted: #6c7376;   /* gris institucional, oscurecido para texto legible */
+  --grid: #e2e4e3;
+  --axis: #c4c8c8;
+  --border: rgba(20, 24, 24, 0.10);
+  --accent: #2c8c95;  /* verde institucional Aeropuertos Argentina */
   --accent-ink: #ffffff;
-  --focus: #2a78d6;
-  --good: #006300;
+  --focus: #2c8c95;
+  --good: #4c7a2e;
   --bad: #b3261e;
-  --warn-bg: #fdf0cc;
-  --warn-ink: #6b4a00;
+  --warn-bg: #f6efc9;
+  --warn-ink: #6b5300;
 
-  /* Series: una por subestación, orden fijo (paleta validada CVD). */
-  --s-set01: #2a78d6;
-  --s-set03: #eb6834;
-  --s-set00: #1baf7a;
-  --s-set04: #eda100;
-  --s-setn3: #e87ba4;
-  --s-set02: #008300;
-  --s-resto: #b9c0c3;
+  /* Series: una por subestación, tomadas del kit de marca (institucional + secundaria + terciaria).
+     El verde institucional queda reservado como acento de marca (botones, foco, línea de Total)
+     para no competir visualmente con ninguna subestación puntual. */
+  --s-set01: #00a3b8;  /* celeste secundario */
+  --s-set03: #2e548a;  /* azul terciario */
+  --s-set00: #dce171;  /* verde-amarillo terciario */
+  --s-set04: #6c9959;  /* verde terciario */
+  --s-setn3: #94cc78;  /* verde claro secundario */
+  --s-set02: #3d7b80;  /* verde-azulado secundario */
+  --s-resto: #83878b;  /* gris institucional */
 
-  /* Rampa secuencial azul para la matriz. */
-  --heat-0: rgba(42, 120, 214, 0.04);
-  --heat-1: rgba(42, 120, 214, 0.42);
+  /* Rampa secuencial (verde institucional) para la matriz. */
+  --heat-0: rgba(44, 140, 149, 0.05);
+  --heat-1: rgba(44, 140, 149, 0.46);
 
-  --font: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font: "Work Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --display: "Poppins", "Work Sans", system-ui, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --bg: #0b0e10;
-    --surface: #151a1d;
-    --surface-2: #1d2327;
-    --ink: #f2f5f6;
-    --ink-2: #b6c0c4;
-    --muted: #87939a;
-    --grid: #252c30;
-    --axis: #3a444a;
+    --bg: #0e1213;
+    --surface: #171c1d;
+    --surface-2: #202626;
+    --ink: #f3f5f4;
+    --ink-2: #bcc2c1;
+    --muted: #97a0a0;
+    --grid: #262d2d;
+    --axis: #3c4444;
     --border: rgba(255, 255, 255, 0.10);
-    --accent: #3987e5;
-    --focus: #6da7ec;
-    --good: #0ca30c;
+    --accent: #3fbdc7;
+    --focus: #62cdd5;
+    --good: #7fc257;
     --bad: #e66767;
-    --warn-bg: #3a2e0c;
-    --warn-ink: #f5cf6d;
-    --s-set01: #3987e5;
-    --s-set03: #d95926;
-    --s-set00: #199e70;
-    --s-set04: #c98500;
-    --s-setn3: #d55181;
-    --s-set02: #008300;
-    --s-resto: #4b555b;
-    --heat-0: rgba(57, 135, 229, 0.05);
-    --heat-1: rgba(57, 135, 229, 0.50);
+    --warn-bg: #3d3208;
+    --warn-ink: #f3d675;
+    --s-set01: #06cce5;
+    --s-set03: #4475bc;
+    --s-set00: #dee28a;
+    --s-set04: #93b585;
+    --s-setn3: #a7d191;
+    --s-set02: #58a6ac;
+    --s-resto: #9da0a4;
+    --heat-0: rgba(63, 189, 199, 0.06);
+    --heat-1: rgba(63, 189, 199, 0.50);
   }
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #0b0e10;
-  --surface: #151a1d;
-  --surface-2: #1d2327;
-  --ink: #f2f5f6;
-  --ink-2: #b6c0c4;
-  --muted: #87939a;
-  --grid: #252c30;
-  --axis: #3a444a;
+  --bg: #0e1213;
+  --surface: #171c1d;
+  --surface-2: #202626;
+  --ink: #f3f5f4;
+  --ink-2: #bcc2c1;
+  --muted: #97a0a0;
+  --grid: #262d2d;
+  --axis: #3c4444;
   --border: rgba(255, 255, 255, 0.10);
-  --accent: #3987e5;
-  --focus: #6da7ec;
-  --good: #0ca30c;
+  --accent: #3fbdc7;
+  --focus: #62cdd5;
+  --good: #7fc257;
   --bad: #e66767;
-  --warn-bg: #3a2e0c;
-  --warn-ink: #f5cf6d;
-  --s-set01: #3987e5;
-  --s-set03: #d95926;
-  --s-set00: #199e70;
-  --s-set04: #c98500;
-  --s-setn3: #d55181;
-  --s-set02: #008300;
-  --s-resto: #4b555b;
-  --heat-0: rgba(57, 135, 229, 0.05);
-  --heat-1: rgba(57, 135, 229, 0.50);
+  --warn-bg: #3d3208;
+  --warn-ink: #f3d675;
+  --s-set01: #06cce5;
+  --s-set03: #4475bc;
+  --s-set00: #dee28a;
+  --s-set04: #93b585;
+  --s-setn3: #a7d191;
+  --s-set02: #58a6ac;
+  --s-resto: #9da0a4;
+  --heat-0: rgba(63, 189, 199, 0.06);
+  --heat-1: rgba(63, 189, 199, 0.50);
 }
 
 * { box-sizing: border-box; }
@@ -109,16 +112,16 @@ body {
 }
 @media (max-width: 520px) { .wrap { padding-inline: 16px; } }
 
-h1, h2 { margin: 0; text-wrap: balance; }
-h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.2; }
+h1, h2 { margin: 0; text-wrap: balance; font-family: var(--display); }
+h1 { font-size: 24px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.2; }
 h2 { font-size: 15px; font-weight: 600; }
 code { font-family: var(--mono); font-size: 12px; background: var(--surface-2); padding: 1px 4px; border-radius: 3px; }
 
 .eyebrow {
-  font: 500 11px/1 var(--mono);
-  letter-spacing: 0.08em;
+  font: 600 11px/1 var(--font);
+  letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--accent);
   margin-bottom: 6px;
 }
 .sub { margin: 4px 0 0; color: var(--ink-2); font-size: 13px; }
@@ -126,6 +129,11 @@ code { font-family: var(--mono); font-size: 12px; background: var(--surface-2); 
 .unidad { font: 400 12px var(--mono); color: var(--muted); margin-left: 4px; }
 
 .top { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+.marca { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.logo { display: block; line-height: 0; }
+.logo img { display: block; height: 34px; width: auto; }
+.separador { width: 1px; height: 34px; background: var(--border); flex: none; }
+@media (max-width: 560px) { .separador { display: none; } }
 
 .btn {
   font: 500 13px var(--font);

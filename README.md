@@ -43,9 +43,15 @@ Los filtros de año, mes y medidor están enlazados entre sí: también se puede
 
 ```
 index.html            Estructura de la página
-css/app.css            Estilos (tema claro/oscuro)
+css/app.css            Estilos (tema claro/oscuro, identidad de Aeropuertos Argentina)
 js/app.js               Lógica: lectura de Excel, cálculos y gráficos
 js/datos-ejemplo.js     Datos de ejemplo (generados desde data/BASE_POWER_ejemplo.xlsx)
 js/vendor/               Chart.js y SheetJS (xlsx), vendorizados localmente
+img/logo-negro.png       Isologo de Aeropuertos Argentina (tema claro)
+img/logo-blanco.png      Isologo de Aeropuertos Argentina (tema oscuro)
 data/BASE_POWER_ejemplo.xlsx  Excel de ejemplo original
 ```
+
+## Identidad visual
+
+La paleta de colores y el isologo son los oficiales de Aeropuertos Argentina (kit de marca institucional/secundaria/terciaria). El verde institucional (`#2c8c95`) se usa como acento de marca (botones, foco, línea de "Total Aeroparque") y las subestaciones toman el resto de los tonos secundarios/terciarios del kit. La tipografía combina Poppins (títulos, en línea con el logo) con Work Sans (texto e interfaz) e IBM Plex Mono (cifras tabulares).

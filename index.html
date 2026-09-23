@@ -6,16 +6,23 @@
 <title>Energía Aeroparque</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Poppins:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
 <div class="wrap">
   <header class="top">
-    <div class="brand">
-      <div class="eyebrow">AEP · Eficiencia energética</div>
-      <h1>Consumo eléctrico del Aeroparque</h1>
-      <p class="sub" id="fuente">—</p>
+    <div class="marca">
+      <picture class="logo">
+        <source srcset="img/logo-blanco.png" media="(prefers-color-scheme: dark)">
+        <img src="img/logo-negro.png" alt="Aeropuertos Argentina" width="180" height="42">
+      </picture>
+      <div class="separador" aria-hidden="true"></div>
+      <div class="brand">
+        <div class="eyebrow">Eficiencia energética · Aeroparque Jorge Newbery</div>
+        <h1>Consumo eléctrico</h1>
+        <p class="sub" id="fuente">—</p>
+      </div>
     </div>
     <div class="top-actions">
       <button type="button" class="btn" id="btn-cargar" aria-expanded="false" aria-controls="panel-carga">Cargar Excel</button>
