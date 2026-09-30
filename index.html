@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Poppins:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/lbe.css">
 </head>
 <body>
 <div class="wrap">
@@ -46,6 +47,7 @@
     </div>
   </section>
 
+  <div class="grupo-medidores">
   <nav class="filtros" aria-label="Filtros">
     <div class="campo">
       <label for="f-anio">Año</label>
@@ -106,9 +108,68 @@
     </div>
     <div class="tabla-scroll"><table class="matriz" id="matriz"></table></div>
   </section>
+  </div>
+
+  <hr class="divisor-seccion">
+
+  <header class="top titulo-seccion">
+    <div class="brand">
+      <div class="eyebrow">Gestión de la energía · Indicador de desempeño (EnPI)</div>
+      <h2>Líneas base energéticas</h2>
+      <p class="sub" id="lbe-subtitulo">—</p>
+    </div>
+    <div class="campo">
+      <label for="lbe-set">Subestación</label>
+      <select id="lbe-set"></select>
+    </div>
+  </header>
+
+  <p class="nota">
+    Cada SET tiene su propia línea base: una regresión del consumo eléctrico mensual contra los grados-día
+    de refrigeración (CDD), ajustada con el año base. Con esa recta se calcula el consumo esperado de cada
+    mes (LBEn) y una banda de control (LCS/LCI) a partir del desvío estándar de los desvíos del año base.
+    Cuando el consumo real supera el LCS, conviene revisar qué pasó ese mes (causa raíz); por debajo del LCI
+    es, en principio, una buena noticia.
+  </p>
+
+  <section class="kpis" id="lbe-kpis" aria-label="Resumen de la línea base"></section>
+
+  <div class="grid-2">
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h2>Ajuste de la línea base</h2>
+          <p class="nota">Consumo real de cada mes contra los grados-día, y la recta usada para predecirlo.</p>
+        </div>
+        <ul class="leyenda-lbe" id="lbe-leyenda-ajuste"></ul>
+      </div>
+      <div class="chart"><canvas id="lbe-ch-ajuste" aria-label="Consumo real contra grados-día, con la recta de la línea base" role="img"></canvas></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h2>Consumo real vs. límites de control</h2>
+          <p class="nota">Los puntos en rojo superaron el LCS o cayeron debajo del LCI.</p>
+        </div>
+        <ul class="leyenda-lbe" id="lbe-leyenda-control"></ul>
+      </div>
+      <div class="chart"><canvas id="lbe-ch-control" aria-label="Consumo real, línea base y banda de control por mes" role="img"></canvas></div>
+    </section>
+  </div>
+
+  <section class="card">
+    <div class="card-head">
+      <div>
+        <h2>Detalle mensual <span class="unidad">MWh</span></h2>
+        <p class="nota">CDD, consumo real, línea base, desvío porcentual y límite superior de control de cada mes.</p>
+      </div>
+    </div>
+    <div class="tabla-scroll"><table class="matriz" id="lbe-tabla"></table></div>
+  </section>
 
   <footer class="pie">
-    <p>Los datos cargados se guardan sólo en este navegador. Mes <span class="pill pill-warn">parcial</span> = consumo menor al 50 % de la mediana de los demás meses (probablemente lectura incompleta).</p>
+    <p>Los datos cargados se guardan sólo en este navegador. Mes <span class="pill pill-warn">parcial</span> = consumo menor al 50 % de la mediana de los demás meses (probablemente lectura incompleta). Líneas base según <code>Linea_base_energetica_para_app.xlsx</code>, ajustadas con 2025 como año base.</p>
   </footer>
 </div>
 
@@ -118,5 +179,7 @@
 <script src="js/vendor/xlsx.full.min.js"></script>
 <script src="js/datos-ejemplo.js"></script>
 <script src="js/app.js"></script>
+<script src="js/linea-base.js"></script>
+<script src="js/lbe.js"></script>
 </body>
 </html>

@@ -43,15 +43,37 @@ Los filtros de año, mes y medidor están enlazados entre sí: también se puede
 
 ```
 index.html            Estructura de la página
-css/app.css            Estilos (tema claro/oscuro, identidad de Aeropuertos Argentina)
-js/app.js               Lógica: lectura de Excel, cálculos y gráficos
-js/datos-ejemplo.js     Datos de ejemplo (generados desde data/BASE_POWER_ejemplo.xlsx)
+css/app.css             Estilos del tablero de medidores (tema claro/oscuro, identidad de Aeropuertos Argentina)
+css/lbe.css             Estilos adicionales de la sección "Líneas base energéticas" (no toca app.css)
+js/app.js               Lógica del tablero de medidores: lectura de Excel, cálculos y gráficos
+js/datos-ejemplo.js     Datos de ejemplo del tablero (generados desde data/BASE_POWER_ejemplo.xlsx)
+js/linea-base.js        Datos de las líneas base (desde data/Linea_base_energetica_para_app.xlsx)
+js/lbe.js               Lógica de la sección "Líneas base energéticas" (independiente de app.js)
 js/vendor/               Chart.js y SheetJS (xlsx), vendorizados localmente
 img/logo-negro.png       Isologo de Aeropuertos Argentina (tema claro)
 img/logo-blanco.png      Isologo de Aeropuertos Argentina (tema oscuro)
-data/BASE_POWER_ejemplo.xlsx  Excel de ejemplo original
+data/BASE_POWER_ejemplo.xlsx               Excel de ejemplo del tablero de medidores
+data/Linea_base_energetica_para_app.xlsx   Excel de origen de las líneas base
 ```
 
 ## Identidad visual
 
 La paleta de colores y el isologo son los oficiales de Aeropuertos Argentina (kit de marca institucional/secundaria/terciaria). El verde institucional (`#2c8c95`) se usa como acento de marca (botones, foco, línea de "Total Aeroparque") y las subestaciones toman el resto de los tonos secundarios/terciarios del kit. La tipografía combina Poppins (títulos, en línea con el logo) con Work Sans (texto e interfaz) e IBM Plex Mono (cifras tabulares).
+
+## Líneas base energéticas (EnPI)
+
+Debajo del tablero de medidores hay una segunda sección, independiente, con las líneas base eléctricas
+de SET 01 (Edificios 5 y 6) y SET 05 (Edificio 4). Estos datos vienen del PME (medición en tiempo real,
+sólo desde 2026) para el consumo del tablero de arriba; las líneas base en cambio son un modelo estadístico
+propio, construido con el consumo mensual real de 2025 (año base) contra los grados-día de refrigeración (CDD):
+
+- **LBEn** (línea base esperada) = pendiente × CDD + intercepto, una regresión lineal ajustada con los 12
+  meses de 2025.
+- **Desvío** = (consumo real − LBEn) / LBEn, y su desvío estándar (de los 12 desvíos del año base) define
+  el ancho de la banda de control: **LCS/LCI** = LBEn ± LBEn × desvío estándar.
+- Cuando el consumo real supera el **LCS**, es la señal para que el equipo de gestión de la energía
+  investigue la causa raíz de ese mes.
+
+`js/lbe.js` recalcula todo esto (LBEn, desvío, LCS/LCI, R²) a partir de `js/linea-base.js` (pendiente,
+intercepto y consumo/CDD mensual de cada SET), con las mismas fórmulas de la planilla original, para no
+duplicar números que puedan desincronizarse.
