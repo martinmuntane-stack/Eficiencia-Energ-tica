@@ -42,6 +42,9 @@ Los filtros de año, mes y medidor están enlazados entre sí: también se puede
 ## Estructura
 
 ```
+agua.html               Página aparte: tablero de consumo de agua (mismo estilo)
+css/agua.css            Colores de sectores y navegación entre páginas
+js/agua.js              Lógica del tablero de agua (Excel: Mes, Punto, Consumo_m3; datos de ejemplo ilustrativos)
 index.html            Estructura de la página
 css/app.css             Estilos del tablero de medidores (tema claro/oscuro, identidad de Aeropuertos Argentina)
 css/lbe.css             Estilos adicionales de la sección "Líneas base energéticas" (no toca app.css)

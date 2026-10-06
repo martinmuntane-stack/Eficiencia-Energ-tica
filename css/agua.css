@@ -1,0 +1,12 @@
+/* Estilos propios de la página de consumo de agua. Reutiliza app.css (tarjetas, KPIs, tabla, tema). */
+:root {
+  --a-1: #00a3b8; --a-2: #2e548a; --a-3: #6c9959; --a-4: #dce171; --a-5: #3d7b80; --a-6: #83878b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --a-1: #06cce5; --a-2: #4475bc; --a-3: #93b585; --a-4: #dee28a; --a-5: #58a6ac; --a-6: #9da0a4;
+  }
+}
+.nav-paginas { display: flex; gap: 6px; flex-wrap: wrap; }
+.nav-paginas a { text-decoration: none; }
+.nav-paginas a[aria-current="page"] { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
