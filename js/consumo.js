@@ -1,19 +1,14 @@
-/* Tablero de consumo de agua del Aeroparque.
+/* Tablero genérico de consumo (gas, combustible...) del Aeroparque; se configura con window.CONSUMO_CFG.
  * Misma mecánica que app.js: Excel leído en el navegador, datos en localStorage, gráficos con Chart.js. */
 (function () {
   'use strict';
 
   const MESES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
   const MES_CORTO = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-  const CLAVE = 'aep-agua-v1';
-  const SECTORES = [
-    { id: 'Terminal', color: '--a-1' },
-    { id: 'Climatización', color: '--a-2' },
-    { id: 'Riego', color: '--a-3' },
-    { id: 'Gastronomía', color: '--a-4' },
-    { id: 'Hangares', color: '--a-5' },
-    { id: 'Otros', color: '--a-6' },
-  ];
+  const CFG = window.CONSUMO_CFG;
+  const CLAVE = CFG.clave;
+  const U = CFG.unidad;
+  const SECTORES = CFG.sectores;
   const SECTOR = Object.fromEntries(SECTORES.map(s => [s.id, s]));
   const TOTAL = '__total';
 
@@ -25,21 +20,12 @@
 
   /* ---------- Datos de ejemplo (ilustrativos, determinísticos) ---------- */
   function ejemplo() {
-    const puntos = [
-      ['Sanitarios Terminal Norte', 'Terminal', 1450, 0.25],
-      ['Sanitarios Terminal Sur', 'Terminal', 1280, 0.25],
-      ['Torres de enfriamiento', 'Climatización', 900, 1.6],
-      ['Riego parquizado', 'Riego', 700, 1.2],
-      ['Patio gastronómico', 'Gastronomía', 1100, 0.3],
-      ['Hangares', 'Hangares', 520, 0.1],
-      ['Edificio administrativo', 'Otros', 340, 0.15],
-    ];
     const consumo = [];
-    puntos.forEach(([punto, sector, base, k], pi) => {
+    CFG.puntos.forEach(([punto, sector, base, k], pi) => {
       for (let m = 1; m <= 12; m++) {
         const ruido = 1 + 0.06 * Math.sin(m * 2.3 + pi * 1.7);
-        const verano = (Math.cos(((m - 1) / 12) * 2 * Math.PI)) * k * 0.5 + 1;
-        consumo.push({ mes: m, punto, sector, m3: Math.round(base * verano * ruido) });
+        const est = 1 + Math.cos(((m - 1) / 12) * 2 * Math.PI + (CFG.picoInvierno ? Math.PI : 0)) * k * 0.5;
+        consumo.push({ mes: m, punto, sector, v: Math.round(base * est * ruido) });
       }
     });
     return { anios: { 2025: { consumo, fuente: 'datos de ejemplo (ilustrativos)' } }, ejemplo: true };
@@ -81,12 +67,8 @@
     const n = norm(txt);
     const hit = SECTORES.find(s => norm(s.id) === n);
     if (hit) return hit.id;
-    if (/sanit|terminal|bano|baño/.test(n)) return 'Terminal';
-    if (/torre|climat|enfri|hvac|chiller/.test(n)) return 'Climatización';
-    if (/riego|parque|jardin/.test(n)) return 'Riego';
-    if (/gastro|cocina|comida|bar|restaur/.test(n)) return 'Gastronomía';
-    if (/hangar/.test(n)) return 'Hangares';
-    return 'Otros';
+    const m = SECTORES.find(s => s.re && s.re.test(n));
+    return m ? m.id : SECTORES[SECTORES.length - 1].id;
   }
 
   function leerLibro(wb, anioDef) {
@@ -96,7 +78,7 @@
         const cab = filas[h].map(norm);
         const iMes = cab.findIndex(c => c.startsWith('mes'));
         const iPun = cab.findIndex(c => c.startsWith('punto') || c.startsWith('medidor'));
-        const iVal = cab.findIndex(c => c.includes('m3') || c.includes('consumo'));
+        const iVal = cab.findIndex(c => CFG.valorRe.test(c));
         if (iMes < 0 || iPun < 0 || iVal < 0) continue;
         const iAnio = cab.findIndex(c => c === 'ano' || c === 'anio' || c.startsWith('ano') );
         const iSec = cab.findIndex(c => c.startsWith('sector'));
@@ -105,12 +87,12 @@
           const mes = mesAIndice(f[iMes]), val = aNumero(f[iVal]), punto = f[iPun];
           if (!mes || val == null || !punto) continue;
           const anio = (iAnio >= 0 && aNumero(f[iAnio])) || anioDef;
-          (porAnio[anio] = porAnio[anio] || []).push({ mes, punto: String(punto).trim(), sector: sectorDe(iSec >= 0 ? f[iSec] : punto), m3: val });
+          (porAnio[anio] = porAnio[anio] || []).push({ mes, punto: String(punto).trim(), sector: sectorDe(iSec >= 0 ? f[iSec] : punto), v: val });
         }
         if (Object.keys(porAnio).length) return porAnio;
       }
     }
-    throw new Error('No encontré una tabla con columnas Mes, Punto y Consumo_m3.');
+    throw new Error('No encontré una tabla con columnas Mes, Punto y ' + CFG.colValor + '.');
   }
 
   /* ---------- Estado y cálculos ---------- */
@@ -121,7 +103,7 @@
     filasAnio().forEach(r => m.set(r.punto, r.sector));
     return [...m].map(([punto, sector]) => ({ punto, sector })).sort((a, b) => a.punto.localeCompare(b.punto, 'es'));
   };
-  const suma = (rows, mes) => rows.filter(r => !mes || r.mes === mes).reduce((a, r) => a + r.m3, 0);
+  const suma = (rows, mes) => rows.filter(r => !mes || r.mes === mes).reduce((a, r) => a + r.v, 0);
   const serieMensual = rows => Array.from({ length: 12 }, (_, i) => suma(rows, i + 1));
   const filasPunto = () => estado.punto === TOTAL ? filasAnio() : filasAnio().filter(r => r.punto === estado.punto);
   const mesesConDatos = () => new Set(filasAnio().map(r => r.mes));
@@ -136,7 +118,7 @@
     const tick = css('--muted'), grid = css('--grid');
     return Object.assign({
       responsive: true, maintainAspectRatio: false, animation: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${nf0.format(c.parsed.y ?? c.parsed.x)} m³` } } },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${nf0.format(c.parsed.y ?? c.parsed.x)} ${U}` } } },
       scales: {
         x: { stacked: true, ticks: { color: tick }, grid: { display: false } },
         y: { stacked: true, ticks: { color: tick, callback: v => nf0.format(v) }, grid: { color: grid }, beginAtZero: true },
@@ -172,10 +154,10 @@
     const pico = serieMensual(rows).reduce((b, v, i) => v > b.v ? { v, i } : b, { v: -1, i: 0 });
 
     $('#kpis').innerHTML =
-      kpi('Consumo del período', nf0.format(total), 'm³', (estado.punto === TOTAL ? 'Total Aeroparque' : estado.punto) + ' · ' + periodo) +
-      kpi(mesSel ? 'Variación mensual' : 'Promedio mensual', mesSel ? (delta ? delta.split(' vs.')[0] : '—') : nf0.format(total / nMeses), mesSel ? '' : 'm³/mes', mesSel ? delta.split('</span>')[1] || 'sin mes anterior' : nMeses + ' meses con datos') +
-      kpi('Mayor consumidor', top ? nf0.format(top.v) : '—', 'm³', top ? `${top.punto} (${nf1.format(totalGlobal ? top.v / totalGlobal * 100 : 0)} % del total)` : '') +
-      kpi('Mes pico', pico.v >= 0 ? MES_CORTO[pico.i] : '—', '', pico.v >= 0 ? nf0.format(pico.v) + ' m³' : '');
+      kpi('Consumo del período', nf0.format(total), U, (estado.punto === TOTAL ? 'Total Aeroparque' : estado.punto) + ' · ' + periodo) +
+      kpi(mesSel ? 'Variación mensual' : 'Promedio mensual', mesSel ? (delta ? delta.split(' vs.')[0] : '—') : nf0.format(total / nMeses), mesSel ? '' : U + '/mes', mesSel ? delta.split('</span>')[1] || 'sin mes anterior' : nMeses + ' meses con datos') +
+      kpi('Mayor consumidor', top ? nf0.format(top.v) : '—', U, top ? `${top.punto} (${nf1.format(totalGlobal ? top.v / totalGlobal * 100 : 0)} % del total)` : '') +
+      kpi('Mes pico', pico.v >= 0 ? MES_CORTO[pico.i] : '—', '', pico.v >= 0 ? nf0.format(pico.v) + ' ' + U : '');
 
     // Mensual apilado por sector
     const sectoresPresentes = SECTORES.filter(s => todos.some(r => r.sector === s.id));

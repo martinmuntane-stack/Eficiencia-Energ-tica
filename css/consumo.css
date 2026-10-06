@@ -1,4 +1,4 @@
-/* Estilos propios de la página de consumo de agua. Reutiliza app.css (tarjetas, KPIs, tabla, tema). */
+/* Colores de sectores (páginas de gas y combustible) y navegación entre páginas. Reutiliza app.css. */
 :root {
   --a-1: #00a3b8; --a-2: #2e548a; --a-3: #6c9959; --a-4: #dce171; --a-5: #3d7b80; --a-6: #83878b;
 }
