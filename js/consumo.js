@@ -132,7 +132,7 @@
   }
 
   function render() {
-    const A = estado.anio, B = estado.cmp, todos = anios();
+    const A = estado.anio, B = estado.cmp, todos = anios().filter(a => a === A || a === B); // sólo el año elegido (y el de comparación, si hay)
     const sA = serie('consumo', A);
     const idxA = sA.map((v, i) => ok(v) ? i : -1).filter(i => i >= 0);
     const totalA = sumar(sA, idxA);
@@ -143,14 +143,15 @@
     // KPIs
     const k = [];
     k.push(kpi('Consumo ' + A, nf0.format(totalA), U, idxA.length === 12 ? 'año completo' : `${idxA.length} meses con dato`));
-    k.push(kpi(`Variación vs. ${B}`, comunes.length ? deltaTxt(sumar(sA, comunes), sumar(serie('consumo', B), comunes)) : '—', '', comunes.length ? `mismos meses (${rango})` : 'sin meses en común'));
+    if (B) k.push(kpi(`Variación vs. ${B}`, comunes.length ? deltaTxt(sumar(sA, comunes), sumar(serie('consumo', B), comunes)) : '—', '', comunes.length ? `mismos meses (${rango})` : 'sin meses en común'));
+    else k.push(kpi('Promedio mensual', idxA.length ? nf0.format(totalA / idxA.length) : '—', U + '/mes', ''));
     k.push(kpi('Mes pico', pico == null ? '—' : MESES[pico], '', pico == null ? '' : nf0.format(sA[pico]) + ' ' + U));
     if (CFG.extras) {
       const vu = serie('vuelos', A), pa = serie('pasajeros', A);
       const idx = idxA.filter(i => ok(vu[i]) && ok(pa[i]));
       const v = sumar(vu, idx), p = sumar(pa, idx), c = sumar(sA, idx);
       k.push(kpi('Litros por vuelo', v ? nf2.format(c / v) : '—', 'L/vuelo', p ? `${nf2.format(c / p * 1000)} L cada 1.000 pasajeros` : ''));
-    } else {
+    } else if (B) {
       k.push(kpi('Promedio mensual', idxA.length ? nf0.format(totalA / idxA.length) : '—', U + '/mes', ''));
     }
     $('#kpis').innerHTML = k.join('');
@@ -193,7 +194,7 @@
     }
 
     // Tabla
-    let h = '<thead><tr><th class="izq">Mes</th>' + todos.map(a => `<th class="${a === A ? 'col-sel' : ''}">${a}</th>`).join('') + '<th>Var. ' + A + ' vs ' + B + '</th></tr></thead><tbody>';
+    let h = '<thead><tr><th class="izq">Mes</th>' + todos.map(a => `<th class="${a === A ? 'col-sel' : ''}">${a}</th>`).join('') + (B ? '<th>Var. ' + A + ' vs ' + B + '</th>' : '') + '</tr></thead><tbody>';
     const at = Object.fromEntries(todos.map(a => [a, atipicos(a)]));
     MESES.forEach((m, i) => {
       const sel = estado.mes === i + 1;
@@ -208,10 +209,10 @@
           : `<td class="num${a === A ? ' col-sel' : ''}">—</td>`;
       });
       const va = serie('consumo', A)[i], vb = serie('consumo', B)[i];
-      h += `<td class="num">${ok(va) && ok(vb) ? deltaTxt(va, vb) : '—'}</td></tr>`;
+      h += (B ? `<td class="num">${ok(va) && ok(vb) ? deltaTxt(va, vb) : '—'}</td>` : '') + '</tr>';
     });
     h += '<tr class="total"><td class="izq">Total</td>' + todos.map(a => `<td class="num">${nf0.format(sumar(serie('consumo', a), serie('consumo', a).map((v, i) => ok(v) ? i : -1).filter(i => i >= 0)))}</td>`).join('') +
-      `<td class="num">${comunes.length ? deltaTxt(sumar(sA, comunes), sumar(serie('consumo', B), comunes)) : '—'}</td></tr></tbody>`;
+      (B ? `<td class="num">${comunes.length ? deltaTxt(sumar(sA, comunes), sumar(serie('consumo', B), comunes)) : '—'}</td>` : '') + '</tr></tbody>';
     $('#matriz').innerHTML = h;
 
     // Mes elegido: ficha
@@ -241,9 +242,9 @@
   function llenar() {
     const as = anios();
     if (!as.includes(estado.anio)) estado.anio = as[as.length - 1];
-    if (!as.includes(estado.cmp) || estado.cmp === estado.anio) estado.cmp = as.filter(a => a !== estado.anio).pop() || estado.anio;
+    if (!as.includes(estado.cmp) || estado.cmp === estado.anio) estado.cmp = 0;
     $('#f-anio').innerHTML = as.map(a => `<option ${a === estado.anio ? 'selected' : ''}>${a}</option>`).join('');
-    $('#f-cmp').innerHTML = as.map(a => `<option ${a === estado.cmp ? 'selected' : ''}>${a}</option>`).join('');
+    $('#f-cmp').innerHTML = '<option value="0">Sin comparar</option>' + as.filter(a => a !== estado.anio).map(a => `<option ${a === estado.cmp ? 'selected' : ''}>${a}</option>`).join('');
     $('#fuente').textContent = 'Fuente: ' + estado.d.fuente;
   }
   const sync = () => { llenar(); render(); };
