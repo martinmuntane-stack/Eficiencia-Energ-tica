@@ -42,10 +42,11 @@ Los filtros de año, mes y medidor están enlazados entre sí: también se puede
 ## Estructura
 
 ```
-gas.html, combustible.html   Páginas aparte (mismo estilo): consumo de gas (m³) y de combustible diésel (litros)
-css/consumo.css         Colores de sectores y navegación entre páginas
-js/consumo.js           Lógica común de gas y combustible (Excel: Mes, Punto, Consumo_m3 / Consumo_litros; opcional Año y Sector)
-js/gas-cfg.js, js/combustible-cfg.js   Unidad, sectores y datos de ejemplo (ilustrativos) de cada página
+gas.html, combustible.html   Páginas aparte (mismo estilo): consumo mensual de gas (m³) y de combustible diésel (litros) por año
+css/consumo.css         Colores por año y navegación entre páginas
+js/consumo.js           Lógica común: comparación entre años, acumulado, litros/vuelo, lectura del Excel
+js/gas-cfg.js, js/combustible-cfg.js   Configuración de cada página
+js/datos-consumos.js    Datos (generados desde data/Consumos_de_Fuentes_de_Energia_AEP.xlsx)
 index.html            Estructura de la página
 css/app.css             Estilos del tablero de medidores (tema claro/oscuro, identidad de Aeropuertos Argentina)
 css/lbe.css             Estilos adicionales de la sección "Líneas base energéticas" (no toca app.css)

@@ -36,22 +36,18 @@
   <section class="panel-carga" id="panel-carga" hidden>
     <div class="drop" id="drop">
       <p><strong>Arrastrá el archivo .xlsx acá</strong> o elegilo desde tu equipo.</p>
-      <p class="hint">Se lee la hoja con columnas <code>Mes</code>, <code>Punto</code> (o <code>Medidor</code>) y <code>Consumo_litros</code>. Opcional: <code>Año</code> y <code>Sector</code>.</p>
+      <p class="hint">Se usa la hoja <code>Consumo Combustible</code>: bloques «Litros de Combustible», «Vuelos Totales» y «Pasajeros» (igual que <code>Consumos_de_Fuentes_de_Energia_AEP.xlsx</code>).</p>
       <div class="drop-row">
-        <label for="anio-carga">Año de los datos</label>
-        <input type="number" id="anio-carga" min="2000" max="2100" step="1">
-        <label class="btn btn-primary" for="archivo">Elegir archivo<input type="file" id="archivo" accept=".xlsx,.xls,.xlsm,.csv" hidden></label>
+        <label class="btn btn-primary" for="archivo">Elegir archivo<input type="file" id="archivo" accept=".xlsx,.xls,.xlsm" hidden></label>
+        <button type="button" class="btn btn-ghost" id="btn-ejemplo">Volver a los datos originales</button>
       </div>
-      <p class="hint">El año se usa sólo si la hoja no tiene columna <code>Año</code>. Cargar otro año lo agrega; el mismo año lo reemplaza.</p>
       <p class="msg" id="msg-carga" role="status"></p>
-      <div class="drop-row"><button type="button" class="btn btn-ghost" id="btn-ejemplo">Volver a los datos de ejemplo</button></div>
     </div>
   </section>
 
   <nav class="filtros" aria-label="Filtros">
     <div class="campo"><label for="f-anio">Año</label><select id="f-anio"></select></div>
-    <div class="campo"><label for="f-mes">Mes</label><select id="f-mes"></select></div>
-    <div class="campo campo-ancho"><label for="f-punto">Punto de medición</label><select id="f-punto"></select></div>
+    <div class="campo"><label for="f-cmp">Comparar con</label><select id="f-cmp"></select></div>
   </nav>
 
   <section class="kpis" id="kpis" aria-label="Resumen"></section>
@@ -59,45 +55,48 @@
   <section class="card">
     <div class="card-head">
       <div>
-        <h2>Consumo mensual por sector</h2>
-        <p class="nota">Tocá una barra para elegir el mes.</p>
+        <h2>Consumo mensual por año <span class="unidad">litros</span></h2>
+        <p class="nota">Los meses sin barra no tienen dato cargado. Tocá una fila de la tabla para ver el detalle de un mes.</p>
       </div>
       <ul class="leyenda" id="leyenda"></ul>
     </div>
-    <div class="chart chart-alto"><canvas id="ch-mensual" aria-label="Consumo mensual apilado por sector" role="img"></canvas></div>
+    <div class="chart chart-alto"><canvas id="ch-mensual" aria-label="Consumo mensual agrupado por año" role="img"></canvas></div>
   </section>
 
   <div class="grid-2">
     <section class="card">
       <div class="card-head"><div>
-        <h2 id="t-ranking">Ranking de puntos</h2>
-        <p class="nota">Tocá una barra para ver el punto.</p>
+        <h2>Acumulado del año</h2>
+        <p class="nota">Suma mes a mes; la línea gruesa es el año elegido.</p>
       </div></div>
-      <div class="chart"><canvas id="ch-ranking" aria-label="Ranking de consumo por punto de medición" role="img"></canvas></div>
+      <div class="chart"><canvas id="ch-acum" aria-label="Consumo acumulado por año" role="img"></canvas></div>
     </section>
     <section class="card">
       <div class="card-head"><div>
-        <h2 id="t-detalle">Detalle</h2>
-        <p class="nota" id="n-detalle"></p>
+        <h2>Litros por vuelo</h2>
+        <p class="nota">Consumo mensual dividido por los vuelos totales del mes: sirve para separar el efecto de la actividad.</p>
       </div></div>
-      <div class="chart"><canvas id="ch-detalle" aria-label="Evolución mensual" role="img"></canvas></div>
+      <div class="chart"><canvas id="ch-ratio" aria-label="Litros por vuelo por mes" role="img"></canvas></div>
     </section>
   </div>
 
   <section class="card">
     <div class="card-head"><div>
-      <h2>Consumo por punto y por mes <span class="unidad">litros</span></h2>
-      <p class="nota">El tono de cada celda es relativo al máximo de su fila. Tocá una fila o el encabezado de un mes para filtrar.</p>
+      <h2>Consumo por mes y por año <span class="unidad">litros</span></h2>
+      <p class="nota">El tono de cada celda es relativo al máximo de su año.</p>
     </div></div>
+    <div id="ficha" hidden></div>
     <div class="tabla-scroll"><table class="matriz" id="matriz"></table></div>
+    <div class="nota" id="notas"></div>
   </section>
 
   <footer class="pie">
-    <p>Los datos de ejemplo son ilustrativos (no son lecturas reales). Los datos cargados se guardan sólo en este navegador.</p>
+    <p>Fuente: Consumos_de_Fuentes_de_Energia_AEP.xlsx (hoja Consumo Combustible), con vuelos y pasajeros como contexto. Los datos cargados se guardan sólo en este navegador.</p>
   </footer>
 </div>
 <script src="js/vendor/chart.umd.min.js"></script>
 <script src="js/vendor/xlsx.full.min.js"></script>
+<script src="js/datos-consumos.js"></script>
 <script src="js/combustible-cfg.js"></script>
 <script src="js/consumo.js"></script>
 </body>

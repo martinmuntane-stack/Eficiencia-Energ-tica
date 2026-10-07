@@ -10,3 +10,8 @@
 .nav-paginas { display: flex; gap: 6px; flex-wrap: wrap; }
 .nav-paginas a { text-decoration: none; }
 .nav-paginas a[aria-current="page"] { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+#ficha h3 { margin: 0 0 8px; font: 600 14px var(--display); }
+#ficha { background: var(--surface-2); border-radius: 8px; padding: 12px 14px; }
+#notas ul { margin: 4px 0 0; padding-left: 18px; }
+#notas:empty { display: none; }
+.matriz tbody tr.fila { cursor: pointer; }
