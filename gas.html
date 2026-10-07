@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Poppins:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="css/app.css">
 <link rel="stylesheet" href="css/consumo.css">
+<link rel="stylesheet" href="css/lbe.css">
 </head>
 <body>
 <div class="wrap">
@@ -45,6 +46,7 @@
     </div>
   </section>
 
+  <div class="grupo-medidores">
   <nav class="filtros" aria-label="Filtros">
     <div class="campo"><label for="f-anio">Año</label><select id="f-anio"></select></div>
     <div class="campo"><label for="f-cmp">Comparar con</label><select id="f-cmp"></select></div>
@@ -83,14 +85,59 @@
     <div class="nota" id="notas"></div>
   </section>
 
+  </div>
+
+  <hr class="divisor-seccion">
+
+  <section id="lbg" class="seccion-lbg">
+    <header class="top titulo-seccion">
+      <div class="brand">
+        <div class="eyebrow">Gestión de la energía · Indicador de desempeño (EnPI)</div>
+        <h2>Línea base del gas según grados-día de calefacción</h2>
+        <p class="sub">Período base: enero 2024 – diciembre 2025 · HDD base 13 °C</p>
+      </div>
+    </header>
+    <p class="nota">El consumo de gas depende sobre todo del frío. La línea base es una regresión del consumo mensual contra los grados-día de calefacción (HDD): con ella se calcula cuánto gas <em>debería</em> consumirse en cada mes (LBEn) según el clima. La banda de control (LCS/LCI) es LBEn ± LBEn × el desvío estándar de los desvíos del período base (<strong id="lbg-sd">—</strong>). Un mes por encima del LCS es la señal para investigar la causa.</p>
+    <p class="ecuacion" id="lbg-ecuacion"></p>
+
+    <section class="kpis" id="lbg-kpis" aria-label="Resumen de la línea base"></section>
+
+    <div class="grid-2">
+      <section class="card">
+        <div class="card-head"><div>
+          <h2>Ajuste de la línea base</h2>
+          <p class="nota">Consumo mensual contra HDD, y la recta usada para predecirlo.</p>
+        </div></div>
+        <div class="chart"><canvas id="lbg-ch-ajuste" aria-label="Consumo de gas contra HDD, con la recta de la línea base" role="img"></canvas></div>
+      </section>
+      <section class="card">
+        <div class="card-head"><div>
+          <h2>Consumo real vs. línea base</h2>
+          <p class="nota">Línea punteada: LBEn. Banda gris: entre LCI y LCS. En rojo, meses sobre el LCS; en verde, bajo el LCI.</p>
+        </div></div>
+        <div class="chart"><canvas id="lbg-ch-control" aria-label="Consumo real, línea base y banda de control por mes" role="img"></canvas></div>
+      </section>
+    </div>
+
+    <section class="card">
+      <div class="card-head"><div>
+        <h2>Detalle mensual <span class="unidad">m³</span></h2>
+        <p class="nota">Meses con consumo de gas y HDD disponibles. Los meses de 2026 se evalúan contra la línea base (no la modifican).</p>
+      </div></div>
+      <div class="tabla-scroll"><table class="matriz" id="lbg-tabla"></table></div>
+    </section>
+  </section>
+
   <footer class="pie">
-    <p>Fuente: Consumos_de_Fuentes_de_Energia_AEP.xlsx (hoja Consumo GAS). Unidad asumida: m³. Los datos cargados se guardan sólo en este navegador.</p>
+    <p>Fuente: Consumos_de_Fuentes_de_Energia_AEP.xlsx (hoja Consumo GAS). Unidad asumida: m³. HDD (base 13 °C) de la hoja GRADOS DIAS de BASE_POWER_ejemplo.xlsx. Los datos cargados se guardan sólo en este navegador.</p>
   </footer>
 </div>
 <script src="js/vendor/chart.umd.min.js"></script>
 <script src="js/vendor/xlsx.full.min.js"></script>
 <script src="js/datos-consumos.js"></script>
 <script src="js/gas-cfg.js"></script>
+<script src="js/hdd.js"></script>
 <script src="js/consumo.js"></script>
+<script src="js/lbe-gas.js"></script>
 </body>
 </html>

@@ -247,7 +247,7 @@
     $('#f-cmp').innerHTML = '<option value="0">Sin comparar</option>' + as.filter(a => a !== estado.anio).map(a => `<option ${a === estado.cmp ? 'selected' : ''}>${a}</option>`).join('');
     $('#fuente').textContent = 'Fuente: ' + estado.d.fuente;
   }
-  const sync = () => { llenar(); render(); };
+  const sync = () => { llenar(); render(); window.__consumoGas = estado.d.consumo; if (window.__lbgRender) window.__lbgRender(); };
 
   $('#f-anio').onchange = e => { estado.anio = +e.target.value; sync(); };
   $('#f-cmp').onchange = e => { estado.cmp = +e.target.value; sync(); };

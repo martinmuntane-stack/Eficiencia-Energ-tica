@@ -46,6 +46,8 @@ gas.html, combustible.html   Páginas aparte (mismo estilo): consumo mensual de 
 css/consumo.css         Colores por año y navegación entre páginas
 js/consumo.js           Lógica común: comparación entre años, acumulado, litros/vuelo, lectura del Excel
 js/gas-cfg.js, js/combustible-cfg.js   Configuración de cada página
+js/hdd.js               HDD (base 13 °C) mensuales, de la hoja GRADOS DIAS
+js/lbe-gas.js           Línea base del gas contra HDD (período base ene 2024 – dic 2025)
 js/datos-consumos.js    Datos (generados desde data/Consumos_de_Fuentes_de_Energia_AEP.xlsx)
 index.html            Estructura de la página
 css/app.css             Estilos del tablero de medidores (tema claro/oscuro, identidad de Aeropuertos Argentina)
