@@ -24,7 +24,7 @@
     Object.keys(consumo).map(Number).sort((a, b) => a - b).forEach(a => {
       (consumo[a] || []).forEach((v, i) => {
         const hdd = (window.HDD13[a] || [])[i];
-        if (ok(v) && ok(hdd)) out.push({ anio: a, mes: i, real: v, hdd, base: a >= BASE_DESDE && a <= BASE_HASTA });
+        if (ok(v) && ok(hdd)) out.push({ anio: a, mes: i, real: v, hdd, base: a >= BASE_DESDE && a <= BASE_HASTA, repetido: i > 0 && v > 0 && v === consumo[a][i - 1] });
       });
     });
     return out;
@@ -110,7 +110,7 @@
     let h = '<thead><tr><th class="izq">Mes</th><th>HDD</th><th>Real (m³)</th><th>LBEn (m³)</th><th>Desvío</th><th>LCI (m³)</th><th>LCS (m³)</th><th class="izq">Estado</th></tr></thead><tbody>';
     f.forEach(r => {
       const pill = r.estado === 'alto' ? '<span class="pill pill-alerta">sobre LCS</span>' : r.estado === 'bajo' ? '<span class="pill pill-ok">bajo LCI</span>' : '<span class="pill pill-info">en banda</span>';
-      h += `<tr class="${r.estado === 'alto' ? 'fila-alta' : r.estado === 'bajo' ? 'fila-baja' : ''}"><td class="izq">${etq(r)}${r.base ? '' : ''}</td><td class="num">${nf1.format(r.hdd)}</td><td class="num">${nf0.format(r.real)}</td><td class="num">${nf0.format(r.lben)}</td><td class="num">${pct(r.desvio)}</td><td class="num">${nf0.format(Math.max(0, r.lci))}</td><td class="num">${nf0.format(r.lcs)}</td><td class="izq">${pill}${r.base ? ' <span class="pill pill-info">base</span>' : ''}</td></tr>`;
+      h += `<tr class="${r.estado === 'alto' ? 'fila-alta' : r.estado === 'bajo' ? 'fila-baja' : ''}"><td class="izq">${etq(r)}${r.base ? '' : ''}</td><td class="num">${nf1.format(r.hdd)}</td><td class="num">${nf0.format(r.real)}</td><td class="num">${nf0.format(r.lben)}</td><td class="num">${pct(r.desvio)}</td><td class="num">${nf0.format(Math.max(0, r.lci))}</td><td class="num">${nf0.format(r.lcs)}</td><td class="izq">${pill}${r.base ? ' <span class="pill pill-info">base</span>' : ''}${r.repetido ? ' <span class="pill pill-warn" title="Igual al mes anterior: verificar la lectura">repetido</span>' : ''}</td></tr>`;
     });
     $('#lbg-tabla').innerHTML = h + '</tbody>';
     $('#lbg-sd').textContent = nf1.format(m.sd * 100) + ' %';
