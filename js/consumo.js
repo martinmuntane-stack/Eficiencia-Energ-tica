@@ -168,18 +168,6 @@
       options: opts(fmtU, { onClick: (_, el) => { if (el.length) { estado.mes = el[0].index + 1 === estado.mes ? 0 : el[0].index + 1; render(); } } }),
     });
 
-    // Acumulado
-    chart('ch-acum', {
-      type: 'line',
-      data: { labels: MES_CORTO, datasets: todos.map(a => {
-        let t = 0;
-        return { label: String(a), borderColor: colorAnio(a), backgroundColor: colorAnio(a), pointRadius: 2, tension: 0.15, spanGaps: false,
-          borderWidth: a === A ? 3 : 1.5,
-          data: serie('consumo', a).map(v => { if (!ok(v)) return null; t += v; return t; }) };
-      }) },
-      options: opts(fmtU),
-    });
-
     // Ratio (sólo combustible): litros por vuelo
     if (CFG.extras) {
       chart('ch-ratio', {
