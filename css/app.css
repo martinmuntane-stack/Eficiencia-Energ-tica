@@ -278,8 +278,15 @@ input, select {
   background: var(--surface-2);
   padding-top: 8px;
 }
-.matriz tr.total td { font-weight: 600; border-top: 1px solid var(--axis); }
-.matriz tr.derivada td { color: var(--ink-2); font-style: italic; }
+.matriz tr.cabecera td { font-weight: 700; }
+.matriz tr.subtotal td { font-weight: 600; border-top: 1px solid var(--axis); }
+.matriz tr.total td {
+  font-weight: 700;
+  background-color: color-mix(in srgb, var(--accent) 16%, var(--surface));
+  border-top: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+}
+.matriz tr.derivada td { color: var(--bad); font-style: italic; }
 .medidor-nom { display: inline-flex; align-items: center; gap: 8px; }
 .medidor-nom i { width: 8px; height: 8px; border-radius: 2px; flex: none; }
 .carga { color: var(--muted); font-size: 12px; max-width: 240px; overflow: hidden; text-overflow: ellipsis; }

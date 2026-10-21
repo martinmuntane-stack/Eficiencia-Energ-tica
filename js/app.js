@@ -652,10 +652,11 @@
     const fila = (id, nombre, color, carga, serie, clases = 'fila') => {
       const tot = suma(serie, c.meses);
       const sel = id === estado.medidor ? ' sel' : '';
-      return `<tr class="${clases}${sel}" data-id="${esc(id)}">` +
+      const dataId = clases.includes('subtotal') ? '' : ` data-id="${esc(id)}"`; // el subtotal no es un medidor seleccionable
+      return `<tr class="${clases}${sel}"${dataId}>` +
         `<td class="izq"><span class="medidor-nom"><i style="background:${color}"></i>${esc(nombre)}</span></td>` +
         `<td class="izq carga" title="${esc(carga)}">${esc(carga)}</td>` +
-        celdas(serie, true) +
+        celdas(serie, !clases.includes('total')) +
         `<td class="num">${mwh(tot)}</td><td class="num">${totPeriodo ? pct(tot / totPeriodo) : '—'}</td></tr>`;
     };
     const span = c.meses.length + 4;
@@ -673,7 +674,10 @@
       for (const m of ms) {
         const meta = metaDe(m);
         const nombre = esCabecera(m) ? m + ' (cabecera)' : m;
-        h += fila(m, nombre, colorDe(m, T), meta ? meta.cargas : '', c.valores.get(m));
+        h += fila(m, nombre, colorDe(m, T), meta ? meta.cargas : '', c.valores.get(m), esCabecera(m) ? 'fila cabecera' : 'fila');
+      }
+      if (b.titulo === 'EDENOR 3') {
+        h += fila('set02-suma', 'SET 02 (suma)', T.color(GRUPO.set02.color), 'Suma de los medidores de SET 02', c.grupoMes.set02, 'fila subtotal');
       }
       if (b.titulo === 'EDENOR 1/2' && c.cabecera) {
         h += fila(RESTO.id, RESTO.nombre, T.color(RESTO.color), 'SMEC − submedidores', c.resto, 'fila derivada');
