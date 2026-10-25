@@ -70,7 +70,7 @@ La paleta de colores y el isologo son los oficiales de Aeropuertos Argentina (ki
 ## Líneas base energéticas (EnPI)
 
 Debajo del tablero de medidores hay una segunda sección, independiente, con las líneas base eléctricas
-de SET 01 (Edificios 5 y 6) y SET 05 (Edificio 4). Estos datos vienen del PME (medición en tiempo real,
+de SET 01 (Edificios 5 y 6) y SET 05 (Edificio 4). Los consumos de 2026 de SET 01 son los del medidor SMEC y los de SET 05 la suma de los medidores de SET 02 (ambos de la tabla de medidores, hasta septiembre). Los datos originales vienen del PME (medición en tiempo real,
 sólo desde 2026) para el consumo del tablero de arriba; las líneas base en cambio son un modelo estadístico
 propio, construido con el consumo mensual real de 2025 (año base) contra los grados-día de refrigeración (CDD):
 

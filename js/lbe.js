@@ -85,7 +85,7 @@
     const T = tokens();
     const c = calcular(set);
 
-    $('#lbe-subtitulo').textContent = set.nombre + ' — ' + set.edificios + ' · alimentador propio, sin relación con los medidores SMEC/SET 02 de la sección anterior.';
+    $('#lbe-subtitulo').textContent = set.nombre + ' — ' + set.edificios + ' · ' + (set.id === 'set01' ? 'consumo 2026 = medidor SMEC (cabecera)' : 'consumo 2026 = suma de los medidores de SET 02') + ' de la tabla de medidores.';
     renderKpis(set, c);
     renderAjuste(set, c, T);
     renderControl(set, c, T);
